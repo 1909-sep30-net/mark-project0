@@ -1,0 +1,2 @@
+C:\revature\mark-project0\mark-project0\obj\Release\netcoreapp3.0\mark-project0.AssemblyInfoInputs.cache
+C:\revature\mark-project0\mark-project0\obj\Release\netcoreapp3.0\mark-project0.AssemblyInfo.cs

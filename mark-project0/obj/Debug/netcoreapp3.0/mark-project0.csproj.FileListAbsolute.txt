@@ -1,0 +1,16 @@
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\mark-project0.exe
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\mark-project0.deps.json
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\mark-project0.runtimeconfig.json
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\mark-project0.runtimeconfig.dev.json
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\mark-project0.dll
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\mark-project0.pdb
+C:\revature\mark-project0\mark-project0\obj\Debug\netcoreapp3.0\mark-project0.csprojAssemblyReference.cache
+C:\revature\mark-project0\mark-project0\obj\Debug\netcoreapp3.0\mark-project0.AssemblyInfoInputs.cache
+C:\revature\mark-project0\mark-project0\obj\Debug\netcoreapp3.0\mark-project0.AssemblyInfo.cs
+C:\revature\mark-project0\mark-project0\obj\Debug\netcoreapp3.0\mark-project0.dll
+C:\revature\mark-project0\mark-project0\obj\Debug\netcoreapp3.0\mark-project0.pdb
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\ClassLibrary1.dll
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\DbLibrary.dll
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\ClassLibrary1.pdb
+C:\revature\mark-project0\mark-project0\bin\Debug\netcoreapp3.0\DbLibrary.pdb
+C:\revature\mark-project0\mark-project0\obj\Debug\netcoreapp3.0\mark-project0.csproj.CopyComplete

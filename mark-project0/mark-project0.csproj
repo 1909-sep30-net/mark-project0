@@ -6,4 +6,9 @@
     <RootNamespace>mark_project0</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\ClassLibrary1.csproj" />
+    <ProjectReference Include="..\DbLibrary\DbLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

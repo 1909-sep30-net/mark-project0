@@ -1,11 +1,49 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.0": {}
+    ".NETCoreApp,Version=v3.0": {
+      "ClassLibrary1/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/ClassLibrary1.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ClassLibrary1.dll": {}
+        }
+      },
+      "DbLibrary/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "ClassLibrary1": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/DbLibrary.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DbLibrary.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "ClassLibrary1/1.0.0": {
+      "type": "project",
+      "path": "../ClassLibrary1/ClassLibrary1.csproj",
+      "msbuildProject": "../ClassLibrary1/ClassLibrary1.csproj"
+    },
+    "DbLibrary/1.0.0": {
+      "type": "project",
+      "path": "../DbLibrary/DbLibrary.csproj",
+      "msbuildProject": "../DbLibrary/DbLibrary.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.0": []
+    ".NETCoreApp,Version=v3.0": [
+      "ClassLibrary1 >= 1.0.0",
+      "DbLibrary >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\MarkC\\.nuget\\packages\\": {},
@@ -36,7 +74,14 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\revature\\mark-project0\\ClassLibrary1\\ClassLibrary1.csproj": {
+              "projectPath": "C:\\revature\\mark-project0\\ClassLibrary1\\ClassLibrary1.csproj"
+            },
+            "C:\\revature\\mark-project0\\DbLibrary\\DbLibrary.csproj": {
+              "projectPath": "C:\\revature\\mark-project0\\DbLibrary\\DbLibrary.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
