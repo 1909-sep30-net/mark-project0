@@ -10,8 +10,6 @@ namespace ClassLibrary1
        // 
         static int      masterID    = 0;
         public int      OrderID     { get; set; }
-        //public int      ProductID   { get; set; }// FK
-        //public string   ProductName { get; set; }
         public int      CustomerID  { get; set; }
         public string   OrderDate   { get; set; }//store orders as individual products with the CustomerID and Date for later sorting.
         public int      LocationID  { get; set; }
