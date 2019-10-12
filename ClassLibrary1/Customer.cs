@@ -47,52 +47,5 @@ namespace ClassLibrary1
             this.CustomerCity       = city;
             this.CustomerZipCode    = zip;
         }
-/*  
-    ///<summary>
-    ///have validation in this function OR in CreateCustomer() as inputs are received?
-    ///</summary>
-    public static List<Customer> AddCustomerToDB(List<Customer> Customers, Customer cust)
-        {
-            Console.WriteLine(cust.CustomerFirstName);
-            Console.WriteLine(cust.CustomerLastName);
-            Console.WriteLine(cust.CustomerStreet);
-            Console.WriteLine(cust.CustomerCity);
-            //Console.WriteLine(cust.CustomerZipCode);
-            //DbLibrary db = new DbLibrary();
-            //Customer cust1 = cust;
-            Customers.Add(cust);
-            return Customers;
-
-        }
-
-        ///<summary>
-        ///</summary>
-        public static Customer ReadCustomer(List<Customer> Customers, Customer cust)
-        {
-            return cust;
-        }
-
-        ///<summary>
-        ///</summary>
-        public static List<Customer> ReadAllCustomers(List<Customer> Customers)
-        {
-            return Customers;
-        }
-
-        ///<summary>
-        ///</summary>
-        public static List<Customer> UpdateCustomer(List<Customer> Customers, Customer customer)
-        {
-            return Customers;
-        }
-
-        ///<summary>
-        ///</summary>
-        public static List<Customer> DeleteCustomer(Customer customer)
-        {
-            Customers.Find(customer);//find out how to find and delete from a list.
-            return customer;
-        }
-        */
     }
 }
