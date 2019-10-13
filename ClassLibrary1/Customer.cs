@@ -37,7 +37,7 @@ namespace ClassLibrary1
         public Customer() {}
 
         //create a customer with arguments
-        public Customer(string fName, string lName, string street, string city, int zip)
+        public Customer(string fName, string lName, string street = null, string city = null, int zip = 00000)
         {
             CustomerID++;
             this.CustID             = CustomerID;

@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClassLibrary1;
 using DbLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -27,11 +28,24 @@ namespace DBLibrary
 {
     public class DbLibrary
     {
-        //this library is for manipulating the DB.. insert, delete, search, etc
-        //public static List<Customer>  customers   = new List<Customer>();
-        //public static List<Location>  locations   = new List<Location>();
-        //public static List<Product>   products    = new List<Product>();
-        //public static List<Order>     orders      = new List<Order>();
+        /**************************************
+        * INVENTORY FUNCTIONS BELOW
+        * ************************************/
+
+        public static void ReadLocationInventory(Project0Context context, string locationName)
+        {
+            //find all the products for that location
+            Console.WriteLine("Reading the inventory");
+            //var result = context.Inventory
+               // .Where(i => i.ProductName == locationName).ToList();
+
+            /*            foreach (var item in result)
+                        {
+                            Console.WriteLine($"{item.ProductId}\t{item.ProductName} = {item.ProductPrice}. {item.ProductQuantity} in stock.\n");
+                        }*/
+           // return result;
+        }
+
 
         /**************************************
          * PRODUCT FUNCTIONS BELOW
@@ -143,9 +157,10 @@ namespace DBLibrary
         ///<summary>
         ///This option not required at this time
         ///</summary>
-        //public static Location ReadOneLocation(Location location)//this might be accomplished with SearchLocations() below
+        //public static bool ReadOneLocation(Project0Context context, int location)//this might be accomplished with SearchLocations() below
         //{
-        //    return location;
+        //    if()
+        //    return true;
         //}
 
         ///<summary>
@@ -178,27 +193,23 @@ namespace DBLibrary
          * CUSTOMER FUNCTIONS BELOW
          * *************************************/
 
-        public static void AddCustomer(Customer customer)
+        public static void AddCustomer(Project0Context context, Customers customer)
         {
-/*            Console.WriteLine(cust.CustomerFirstName);
-            Console.WriteLine(cust.CustomerLastName);
-            Console.WriteLine(cust.CustomerStreet);
-            Console.WriteLine(cust.CustomerCity);*/
-            //Console.WriteLine(cust.CustomerZipCode);
-            //DbLibrary db = new DbLibrary();
-            //Customer cust1 = cust;
-            //customers.Add(customer);
-            //return customers;
-
+            context.Add(customer);
+            context.SaveChanges();
         }
 
 
         ///<summary>
         ///This method takes the verified customer info from main and inserts it into the DB
         ///</summary>
-        public static Customer ReadCustomer(Project0Context context, Customer customer)
+        public static Customers ReadCustomer(Project0Context context, Customers customer)
         {
-            return customer;
+            var result = context.Customers
+                .Where(c => c.CustomerFirstName == customer.CustomerFirstName && c.CustomerLastName == customer.CustomerLastName);
+            //need to typedef the result
+            //Customers test1 = result.Cast<Customers>();
+            return result.FirstOrDefault();
         }
 
         ///<summary>
@@ -234,7 +245,7 @@ namespace DBLibrary
         ///<summary>
         ///This option will take a complete order object and insert it into the DB
         ///</summary>
-        public static void AddOrder(Project0Context context, Order order)
+        public static void AddOrder(Project0Context context, Orders order)
         {
             //return orders;
         }
@@ -243,7 +254,7 @@ namespace DBLibrary
         ///This option will take the details of an order inputted by the user and searches for a matching order. 
         ///Then returns the order to main for display
         ///</summary>
-        public static Order ReadOrder(Project0Context context, Order order)
+        public static Orders ReadOrder(Project0Context context, Orders order)
         {
             return order;
         }

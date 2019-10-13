@@ -15,10 +15,7 @@ namespace ClassLibrary1
         public int      LocationZip     { get; set; }
 
 
-        public Location()
-        {
-
-        }
+        public Location()  { }
 
         public Location(string loc, string street, string city, int zip)
         {

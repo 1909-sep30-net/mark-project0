@@ -7,7 +7,6 @@ namespace DbLibrary.Entities
     {
         public Locations()
         {
-            Inventory = new HashSet<Inventory>();
             Orders = new HashSet<Orders>();
         }
 
@@ -15,7 +14,6 @@ namespace DbLibrary.Entities
         public string LocationName { get; set; }
         public DateTime DateModified { get; set; }
 
-        public virtual ICollection<Inventory> Inventory { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
     }
 }
