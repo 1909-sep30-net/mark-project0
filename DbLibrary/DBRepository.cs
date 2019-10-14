@@ -1,4 +1,5 @@
-﻿// Entity Framework Core
+﻿//TEST COMMIT
+// Entity Framework Core
 // database-first approach steps...
 /*
  * 1. have a data access library project separate from the startup application project.
