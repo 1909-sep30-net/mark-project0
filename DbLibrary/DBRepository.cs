@@ -1,4 +1,5 @@
-﻿// Entity Framework Core
+﻿//TEST COMMIT
+// Entity Framework Core
 // database-first approach steps...
 /*
  * 1. have a data access library project separate from the startup application project.
@@ -33,6 +34,7 @@ namespace DBLibrary
         * INVENTORY FUNCTIONS BELOW
         * ************************************/
 
+        private static Project0Context _dbContext;
 
         public static void ReadLocationInventory(Project0Context context, string locationName)
         {
@@ -91,9 +93,10 @@ namespace DBLibrary
         ///<summary>
         ///returns a list of all the Products
         ///</summary>
-        public static List<Product> ReadAllProducts(Project0Context context)
+        public static DbSet<Products> ReadAllProducts(Project0Context context)
         {
-            //find all the products in the array
+            return context.Products;
+/*            //find all the products in the array
             Console.WriteLine("Reading all products");
 
             List<Product> prods = new List<Product>();
@@ -103,9 +106,9 @@ namespace DBLibrary
                 //Product prod = new Product();
                 //prod = Mapper.MapProduct(p);
                 prods.Add(Mapper.MapProduct(p));
-            }
+            }*/
 
-            return prods;
+            
         }
 
         ///<summary>
@@ -162,20 +165,23 @@ namespace DBLibrary
 
         ///<summary>
         ///</summary>
-        public static List<Location> ReadAllLocations(Project0Context context)
+        public static DbSet<Locations> ReadAllLocations(Project0Context db)
         {
             //make a list of locations
-            List<Location> locationsList = new List<Location>();
-
-            foreach (var l in context.Locations)
+            //IEnumerable<Location> locationsList = new List<Location>();
+/*            foreach (var l in db.Locations)
             {
+                Console.WriteLine($"ID =>{l.LocationId}");
                 //Location location = new Location();
                 //prod = Mapper.MapProduct(p);
-                locationsList.Add(Mapper.MapLocation(l));
-            }
+                Location m = new Location();
+                m = Mapper.MapLocation(l);
+                Console.WriteLine($"CITY =>{m.LocationCity}");
 
-            return locationsList;
-            //return;
+                db.Locations.Add(l);
+            }*/
+            //Console.WriteLine(locationsList.Count());
+            return db.Locations;
         }
 
         ///<summary>
@@ -221,8 +227,9 @@ namespace DBLibrary
         {
 
             //needs to be mapped first!!!
-            //_db.Add(customer);
-            //_db.SaveChanges();
+            //Customer
+            context.Add(customer);
+            context.SaveChanges();
         }
 
 

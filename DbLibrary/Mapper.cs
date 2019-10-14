@@ -61,7 +61,11 @@ namespace DBLibrary
         //ENTITY TO CLASS
         public static Location MapLocation(Locations locations)
         {
-            return new Location(locations.LocationName);
+            Console.WriteLine($"CITY =>{locations.LocationName }");
+            string name = locations.LocationName;
+            Console.WriteLine(name);
+            Location n = new Location(name);
+            return n;
         }
 
         //CLASS TO ENTITY
