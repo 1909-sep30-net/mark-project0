@@ -15,12 +15,9 @@ namespace ClassLibrary1
         public int      LocationZip     { get; set; }
 
 
-        public Location()
-        {
+        public Location()  { }
 
-        }
-
-        public Location(string loc, string street, string city, int zip)
+        public Location(string loc, string street = null, string city = null, int zip = 00000)
         {
             LocationID++;
             locID = LocationID;
@@ -29,51 +26,5 @@ namespace ClassLibrary1
             LocationCity = city;
             LocationZip = zip;
         }
-/*
-        ///<summary>
-        ///</summary>
-        public static List<Location> AddLocation(List<Location> locations, Location location )
-        {
-            //{ "Dallas", "Fort Worth", "Crowley", "Burleson", "Joshua" };
-            locations.Add(location);
-            return locations;
-        }
-
-        ///<summary>
-        ///</summary>
-        public static List<Location> ReadAllLocations(List<Location> locations)
-        {
-            //make a list of locations
-            return locations;
-        }
-
-        ///<summary>
-        ///</summary>
-        public static Location ReadOneLocation(List<Location> locations, Location location)//this might be accomplished with SearchLocations() below
-        {
-            return location;
-        }
-
-        ///<summary>
-        ///</summary>
-        public static List<Location> UpdateLocation(List<Location> locations, Location location)
-        {
-            return locations;
-        }
-
-        ///<summary>
-        ///</summary>
-        public static List<Location> DeleteLocation(List<Location> locations, Location location)
-        {
-            return locations;
-        }
-
-        ///<summary>
-        ///</summary>
-        public static Location SearchLocations(List<Location> locations, Location location)
-        {
-            return location;
-        }
-*/
     }
 }
