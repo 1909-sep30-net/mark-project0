@@ -29,7 +29,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using ClassLibrary1;
-//using DbLibrary;
+using DBLibrary;
 using DbLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -81,7 +81,7 @@ namespace mark_project0
             optionsBuilder.UseSqlServer(config.connectionString);
             using (var db = new Project0Context(optionsBuilder.Options))
             {
-
+                DBRepository DbFuncs = new DBRepository(db);
                 //Mapper mapper1 = new Mapper(db);
                 Customer customer = new Customer();
                 Order order = new Order();
@@ -93,42 +93,42 @@ namespace mark_project0
 
                     /*******************************log in or register the user*******************/
                     string userType;
-/*                    do
-                    {
-                        Console.WriteLine("Are you a returning user of do you need to register?");
-                        Console.WriteLine("\n\n\tA - Register.\n\tB - Returning User.");
-                        userType = Console.ReadLine();
-                        userType = userType.ToUpper();  //to accept upper and lower case letters.                                   //NEEDS VALIDATION?
-                    } while (!(userType.Equals("A") || userType.Equals("B")));
+                    /*                    do
+                                        {
+                                            Console.WriteLine("Are you a returning user of do you need to register?");
+                                            Console.WriteLine("\n\n\tA - Register.\n\tB - Returning User.");
+                                            userType = Console.ReadLine();
+                                            userType = userType.ToUpper();  //to accept upper and lower case letters.                                   //NEEDS VALIDATION?
+                                        } while (!(userType.Equals("A") || userType.Equals("B")));
 
-                    switch (userType)
-                    {
-                        case "A":
-                            customer = RegisterUser();                      //register the user
-                            //DBLibrary.DbLibrary.AddCustomer(db, customer);  //add the new, VALIDATED, user to the DB.
-                            break;
-                        case "B":
-                            customer = SignInUser(db);                      //sign the user in.
-                            break;
-                    }
-*/
+                                        switch (userType)
+                                        {
+                                            case "A":
+                                                customer = RegisterUser();                      //register the user
+                                                //DBLibrary.DbLibrary.AddCustomer(db, customer);  //add the new, VALIDATED, user to the DB.
+                                                break;
+                                            case "B":
+                                                customer = SignInUser(db);                      //sign the user in.
+                                                break;
+                                        }
+                    */
 
                     /**********************choose the location*****/
-                    var allLocations = DBLibrary.DBRepository.ReadAllLocations();
+                    //var allLocations = DBLibrary.DBRepository.ReadAllLocations(db);
                     string locChoice;
                     int finalLocChoice;
-/*                    do
-                    {
-                        foreach (var item in allLocations)
-                        {
-                            Console.WriteLine($"{item.locID} - {item.LocationName}\n");
-                        }
-                        Console.WriteLine("Please choose a number from the above list.");
-                        locChoice = Console.ReadLine();
-                        finalLocChoice = Convert.ToInt32(locChoice);
-                        //location = allLocations.Find(finalLocChoice);
-                    } while (location == null);
-*/
+                    /*                    do
+                                        {
+                                            foreach (var item in allLocations)
+                                            {
+                                                Console.WriteLine($"{item.locID} - {item.LocationName}\n");
+                                            }
+                                            Console.WriteLine("Please choose a number from the above list.");
+                                            locChoice = Console.ReadLine();
+                                            finalLocChoice = Convert.ToInt32(locChoice);
+                                            //location = allLocations.Find(finalLocChoice);
+                                        } while (location == null);
+                    */
 
 
                     /*************************Make the order****************************/
@@ -154,77 +154,86 @@ namespace mark_project0
                                         }while(!prodChoice.Equals(0));
 
                     */
-                    List<Location> list = new List<Location>();
-                    list = DBLibrary.DBRepository.ReadAllLocations();
-                    foreach (var item in list)
-                    {
-                        Console.WriteLine(item);
 
-                        //Console.WriteLine($"{item.ProductId}\t{item.ProductName} = {item.ProductPrice}. {item.ProductQuantity} in stock.\n");
-                        //Console.WriteLine($"{item.GetType().GetProperty(item).GetValue(item, null)}");
-                    }
+                    /* GET ALL LOCATIONS BACK   
+                                      IEnumerable<Locations> ilist = new List<Locations>();
+
+                                      ilist = DBRepository.ReadAllLocations(db);
+                                      Console.WriteLine("main......\n");
+
+                                      ilist.ToList();
+                                      Console.WriteLine("main......\n");
+                                      Console.WriteLine(ilist.Count());
+
+
+
+
+                                                          
+                                                      }
+                                      */
+/*GET ALL PRODUCTS             
+ *                  IEnumerable<Products> ilist = new List<Products>();
+                    ilist = DBRepository.ReadAllProducts(db).ToList();
+                    foreach (var item in ilist)
+                    {
+                        Console.WriteLine($"In main ProductName =>{item.ProductName}");
+                    }*/
+
+/****/
+
+
 
                     finished = true;
-                }
+                }//END OF WHILE LOOP
 
-
-
-
-
-
-
-
-
-
-
-
-                //Console.WriteLine($"==>{customer.CustomerId} - {customer.CustomerFirstName} - {customer.CustomerLastName} - {customer.DateModified}<==");
                 Console.WriteLine("\nDONE\n");
-            }
-            /*
-            var connectionString = config.connectionString;
-
-            try
-            {
-                using var connection = new SqlConnection(connectionString);
-                connection.Open();
-                using DbCommand command = new SqlCommand("SELECT * FROM Customers;", connection);
-                using DbDataReader reader = await command.ExecuteReaderAsync();
-
-                if (reader.HasRows)
-                {
-                    Console.WriteLine("Successfully accessed the DB");
-                }
-                else
-                {
-                    Console.WriteLine("DID NOT successfully access the DB");
-                }
-
-                await connection.CloseAsync();
-            }
-            catch(SqlException ex)
-            {
-                Console.WriteLine($"\n\tError => {ex.Message}\n");
-            }*/
-
-            //Products product1 = new Products();
-            /*            product1.ProductName = "orange";
-                        product1.ProductPrice = 12;
-                        DBLibrary.DbLibrary.AddProduct(product1);*/
-
-            //test ReadProducts()
-            //product1 = DBLibrary.DbLibrary.ReadProduct(product1);
-            //Console.WriteLine($"This is Product1 =>{product1.ProductId} - {product1.ProductName} - {product1.ProductPrice}");
-
-            //test ReadAllProducts
-            //var prodList = DBLibrary.DbLibrary.ReadAllProducts();
-            //foreach (var item in prodList)
-            //{
-            //    Console.WriteLine($"==>{item.ProductId} - {item.ProductName} - {item.ProductPrice} - {item.DateModified}<==");
-            //}
+            }//END OF USING
         }//END OF MAIN
     }//END OF CLASS
 }//END OF NAMESPACE
+
+ /*
+ var connectionString = config.connectionString;
+
+ try
+ {
+     using var connection = new SqlConnection(connectionString);
+     connection.Open();
+     using DbCommand command = new SqlCommand("SELECT * FROM Customers;", connection);
+     using DbDataReader reader = await command.ExecuteReaderAsync();
+
+     if (reader.HasRows)
+     {
+         Console.WriteLine("Successfully accessed the DB");
+     }
+     else
+     {
+         Console.WriteLine("DID NOT successfully access the DB");
+     }
+
+     await connection.CloseAsync();
+ }
+ catch(SqlException ex)
+ {
+     Console.WriteLine($"\n\tError => {ex.Message}\n");
+ }*/
+
+//Products product1 = new Products();
+/*            product1.ProductName = "orange";
+            product1.ProductPrice = 12;
+            DBLibrary.DbLibrary.AddProduct(product1);*/
+
+//test ReadProducts()
+//product1 = DBLibrary.DbLibrary.ReadProduct(product1);
+//Console.WriteLine($"This is Product1 =>{product1.ProductId} - {product1.ProductName} - {product1.ProductPrice}");
+
+//test ReadAllProducts
+//var prodList = DBLibrary.DbLibrary.ReadAllProducts();
+//foreach (var item in prodList)
+//{
+//    Console.WriteLine($"==>{item.ProductId} - {item.ProductName} - {item.ProductPrice} - {item.DateModified}<==");
+//}
+
 
 
 /*
