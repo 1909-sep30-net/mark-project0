@@ -23,19 +23,23 @@ using System.Linq;
 using ClassLibrary1;
 using DbLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
+//using DbLibrary.Mapper;
 
 namespace DBLibrary
 {
-    public class DbLibrary
+    public class DBRepository
     {
         /**************************************
         * INVENTORY FUNCTIONS BELOW
         * ************************************/
 
+
         public static void ReadLocationInventory(Project0Context context, string locationName)
         {
             //find all the products for that location
             Console.WriteLine("Reading the inventory");
+
+
             //var result = context.Inventory
                // .Where(i => i.ProductName == locationName).ToList();
 
@@ -87,11 +91,21 @@ namespace DBLibrary
         ///<summary>
         ///returns a list of all the Products
         ///</summary>
-        public static DbSet<Products> ReadAllProducts(Project0Context context)
+        public static List<Product> ReadAllProducts(Project0Context context)
         {
             //find all the products in the array
-            Console.WriteLine("Reading a product");
-            return context.Products;
+            Console.WriteLine("Reading all products");
+
+            List<Product> prods = new List<Product>();
+
+            foreach (var p in context.Products)
+            {
+                //Product prod = new Product();
+                //prod = Mapper.MapProduct(p);
+                prods.Add(Mapper.MapProduct(p));
+            }
+
+            return prods;
         }
 
         ///<summary>
@@ -148,10 +162,20 @@ namespace DBLibrary
 
         ///<summary>
         ///</summary>
-        public static DbSet<Locations> ReadAllLocations(Project0Context context)
+        public static List<Location> ReadAllLocations(Project0Context context)
         {
             //make a list of locations
-            return context.Locations;
+            List<Location> locationsList = new List<Location>();
+
+            foreach (var l in context.Locations)
+            {
+                //Location location = new Location();
+                //prod = Mapper.MapProduct(p);
+                locationsList.Add(Mapper.MapLocation(l));
+            }
+
+            return locationsList;
+            //return;
         }
 
         ///<summary>
@@ -193,23 +217,25 @@ namespace DBLibrary
          * CUSTOMER FUNCTIONS BELOW
          * *************************************/
 
-        public static void AddCustomer(Project0Context context, Customers customer)
+        public static void AddCustomer(Project0Context context, Customer customer)
         {
-            context.Add(customer);
-            context.SaveChanges();
+
+            //needs to be mapped first!!!
+            //_db.Add(customer);
+            //_db.SaveChanges();
         }
 
 
         ///<summary>
         ///This method takes the verified customer info from main and inserts it into the DB
         ///</summary>
-        public static Customers ReadCustomer(Project0Context context, Customers customer)
+        public static void ReadCustomer(Project0Context context, Customer customer)
         {
-            var result = context.Customers
-                .Where(c => c.CustomerFirstName == customer.CustomerFirstName && c.CustomerLastName == customer.CustomerLastName);
+            //Customer = 
+            //var result = _db.Customers.Where(c => c.CustomerFirstName == customer.CustomerFirstName && c.CustomerLastName == customer.CustomerLastName);
             //need to typedef the result
             //Customers test1 = result.Cast<Customers>();
-            return result.FirstOrDefault();
+            //return result.FirstOrDefault();
         }
 
         ///<summary>

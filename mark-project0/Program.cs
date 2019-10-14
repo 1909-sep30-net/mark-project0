@@ -29,7 +29,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using ClassLibrary1;
-using DbLibrary;
+//using DbLibrary;
 using DbLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +39,7 @@ namespace mark_project0
     {
 
         //function to get user info
-        static Customers RegisterUser()                             //this needs to input the new user in the DB
+        static Customer RegisterUser()                             //this needs to input the new user in the DB
         {
             //have user enter all info.
             Console.WriteLine("\nPlease enter your First Name.");
@@ -53,24 +53,24 @@ namespace mark_project0
             //Console.WriteLine("Please enter your Zip Code.");
             //int zip = Convert.ToInt32(Console.ReadLine());
 
-            Customers customer1 = new Customers(fName, lName);
+            Customer customer1 = new Customer(fName, lName);
             //customer1.CustomerFirstName = fName;
             //customer1.CustomerLastName = lName;
             return customer1;
         }//END OF Register User()
 
-        static Customers SignInUser(Project0Context context)
+        static Customer SignInUser(Project0Context context)
         {
             //have user enter all info.
             Console.WriteLine("\nPlease enter your First Name.");
             string fName = Console.ReadLine();
             Console.WriteLine("\nPlease enter your Last Name.");
             string lName = Console.ReadLine();
-            Customers customer1 = new Customers(fName, lName);
-            var foundCustomer = DBLibrary.DbLibrary.ReadCustomer(context, customer1);
+            Customer customer1 = new Customer(fName, lName);
+            //var foundCustomer = DBLibrary.DbLibrary.ReadCustomer(context, customer1);
             
             //Console.WriteLine($"{foundCustomer.CustomerFirstName} - {foundCustomer.CustomerLastName}");
-            return foundCustomer;
+            return customer1;
 
         }//END OF SugnInUser()
 
@@ -81,77 +81,88 @@ namespace mark_project0
             optionsBuilder.UseSqlServer(config.connectionString);
             using (var db = new Project0Context(optionsBuilder.Options))
             {
-                Customers customer = new Customers();
-                Orders order = new Orders();
-                Locations location = new Locations();
+
+                //Mapper mapper1 = new Mapper(db);
+                Customer customer = new Customer();
+                Order order = new Order();
+                Location location = new Location();
+
                 while (finished.Equals(false))
                 {
 
 
                     /*******************************log in or register the user*******************/
                     string userType;
-                    do
+/*                    do
                     {
                         Console.WriteLine("Are you a returning user of do you need to register?");
                         Console.WriteLine("\n\n\tA - Register.\n\tB - Returning User.");
                         userType = Console.ReadLine();
-                        userType.ToUpper();                                     //NEEDS VALIDATION?
+                        userType = userType.ToUpper();  //to accept upper and lower case letters.                                   //NEEDS VALIDATION?
                     } while (!(userType.Equals("A") || userType.Equals("B")));
 
                     switch (userType)
                     {
                         case "A":
                             customer = RegisterUser();                      //register the user
-                            DBLibrary.DbLibrary.AddCustomer(db, customer);  //add the new, VALIDATED, user to the DB.
+                            //DBLibrary.DbLibrary.AddCustomer(db, customer);  //add the new, VALIDATED, user to the DB.
                             break;
                         case "B":
                             customer = SignInUser(db);                      //sign the user in.
                             break;
                     }
-
+*/
 
                     /**********************choose the location*****/
-                    var allLocations = DBLibrary.DbLibrary.ReadAllLocations(db);
+                    var allLocations = DBLibrary.DBRepository.ReadAllLocations();
                     string locChoice;
                     int finalLocChoice;
-                    do
+/*                    do
                     {
                         foreach (var item in allLocations)
                         {
-                            Console.WriteLine($"{item.LocationId} - {item.LocationName}\n");
+                            Console.WriteLine($"{item.locID} - {item.LocationName}\n");
                         }
                         Console.WriteLine("Please choose a number from the above list.");
                         locChoice = Console.ReadLine();
                         finalLocChoice = Convert.ToInt32(locChoice);
-                        location = allLocations.Find(finalLocChoice);
+                        //location = allLocations.Find(finalLocChoice);
                     } while (location == null);
-
+*/
 
 
                     /*************************Make the order****************************/
                     int prodChoice = -1;
                     string choice;
-                   // var allProductsInInventory = DBLibrary.DbLibrary.ReadLocationInventory(db, location.LocationName);//get all the products in the chosen locations inventory
-                    do
+                    // var allProductsInInventory = DBLibrary.DbLibrary.ReadLocationInventory(db, location.LocationName);//get all the products in the chosen locations inventory
+                    /*                    do
+                                        {
+                                            Console.WriteLine("\tPlease choose from the available product numbers.\n\tYou may keep placing products until\n\tyou enter 0 to check out.");
+                                            //display all products.
+                                      *//*      foreach (var item in allProductsInInventory)
+                                            {
+                                                Console.WriteLine(item);
+
+                                                //Console.WriteLine($"{item.ProductId}\t{item.ProductName} = {item.ProductPrice}. {item.ProductQuantity} in stock.\n");
+                                                //Console.WriteLine($"{item.GetType().GetProperty(item).GetValue(item, null)}");
+                                            }*//*
+                                            Console.WriteLine("0 - Check out.");
+                                            choice = Console.ReadLine();
+                                            prodChoice = Convert.ToInt32(choice);
+
+
+                                        }while(!prodChoice.Equals(0));
+
+                    */
+                    List<Location> list = new List<Location>();
+                    list = DBLibrary.DBRepository.ReadAllLocations();
+                    foreach (var item in list)
                     {
-                        Console.WriteLine("\tPlease choose from the available product numbers.\n\tYou may keep placing products until\n\tyou enter 0 to check out.");
-                        //display all products.
-                  /*      foreach (var item in allProductsInInventory)
-                        {
-                            Console.WriteLine(item);
+                        Console.WriteLine(item);
 
-                            //Console.WriteLine($"{item.ProductId}\t{item.ProductName} = {item.ProductPrice}. {item.ProductQuantity} in stock.\n");
-                            //Console.WriteLine($"{item.GetType().GetProperty(item).GetValue(item, null)}");
-                        }*/
-                        Console.WriteLine("0 - Check out.");
-                        choice = Console.ReadLine();
-                        prodChoice = Convert.ToInt32(choice);
-
-
-                    }while(!prodChoice.Equals(0));
-
-
-
+                        //Console.WriteLine($"{item.ProductId}\t{item.ProductName} = {item.ProductPrice}. {item.ProductQuantity} in stock.\n");
+                        //Console.WriteLine($"{item.GetType().GetProperty(item).GetValue(item, null)}");
+                    }
 
                     finished = true;
                 }

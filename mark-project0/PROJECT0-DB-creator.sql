@@ -51,11 +51,21 @@ DROP TABLE IF EXISTS Project0.Project0.Orders; --in case Orders table already ex
 
 CREATE TABLE Project0.Orders(
 	OrderID INT NOT NULL PRIMARY KEY IDENTITY,
-	ProductId INT NOT NULL FOREIGN KEY REFERENCES Project0.Products(ProductId),
 	LocationId INT NOT NULL FOREIGN KEY REFERENCES Project0.Locations(LocationId),
 	CustomerId INT NOT NULL FOREIGN KEY REFERENCES Project0.Customers(CustomerId),
 	DateModified DATETIME2 NOT NULL DEFAULT (GETDATE())
 );
+
+DROP TABLE IF EXISTS Project0.Project0.ProductsFromOrder; --in case ProductsFromOrder table already exists.
+
+CREATE TABLE Project0.ProductsFromOrder(
+	ProductsFromOrder INT PRIMARY KEY IDENTITY, 
+	OrderID INT NOT NULL FOREIGN KEY REFERENCES Project0.Orders(OrderId),
+	ProductId INT NOT NULL FOREIGN KEY REFERENCES Project0.Products(ProductId),
+	Quantity INT NOT NULL DEFAULT 0,
+	DateModified DATETIME2 NOT NULL DEFAULT (GETDATE())
+);
+
 
 -- constraints:
 --    NOT NULL - column does not accept NULL as a value.

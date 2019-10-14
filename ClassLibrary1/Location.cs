@@ -17,7 +17,7 @@ namespace ClassLibrary1
 
         public Location()  { }
 
-        public Location(string loc, string street, string city, int zip)
+        public Location(string loc, string street = null, string city = null, int zip = 00000)
         {
             LocationID++;
             locID = LocationID;

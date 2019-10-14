@@ -15,5 +15,16 @@ namespace ClassLibrary1
         public int      LocationID  { get; set; }
         IDictionary<string, int> itemsOrdered = new Dictionary<string, int>();//to hold the product and quantity
 
+
+        public Order() { }
+
+        public Order(int orderId, int locationId, int customerId)
+        {
+            this.OrderID = orderId;
+            this.LocationID = locationId;
+            this.CustomerID = customerId;
+        }
+
+
     }
 }

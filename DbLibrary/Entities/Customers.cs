@@ -10,13 +10,6 @@ namespace DbLibrary.Entities
             Orders = new HashSet<Orders>();
         }
 
-        public Customers(string fName, string lName)
-        {
-            this.CustomerFirstName = fName;
-            this.CustomerLastName = lName;
-            Orders = new HashSet<Orders>();
-        }
-
         public int CustomerId { get; set; }
         public string CustomerFirstName { get; set; }
         public string CustomerLastName { get; set; }

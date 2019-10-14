@@ -20,6 +20,7 @@ namespace DbLibrary.Entities
         public virtual DbSet<Locations> Locations { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<ProductsFromOrder> ProductsFromOrder { get; set; }
 
 /*        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -90,7 +91,7 @@ namespace DbLibrary.Entities
             modelBuilder.Entity<Orders>(entity =>
             {
                 entity.HasKey(e => e.OrderId)
-                    .HasName("PK__Orders__C3905BAF4D5BB142");
+                    .HasName("PK__Orders__C3905BAFB53F4D37");
 
                 entity.ToTable("Orders", "Project0");
 
@@ -102,19 +103,13 @@ namespace DbLibrary.Entities
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Orders__Customer__00200768");
+                    .HasConstraintName("FK__Orders__Customer__04E4BC85");
 
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.LocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Orders__Location__7F2BE32F");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Orders__ProductI__7E37BEF6");
+                    .HasConstraintName("FK__Orders__Location__03F0984C");
             });
 
             modelBuilder.Entity<Products>(entity =>
@@ -137,6 +132,32 @@ namespace DbLibrary.Entities
                 entity.Property(e => e.ProductPrice)
                     .HasColumnType("money")
                     .HasDefaultValueSql("((0))");
+            });
+
+            modelBuilder.Entity<ProductsFromOrder>(entity =>
+            {
+                entity.HasKey(e => e.ProductsFromOrder1)
+                    .HasName("PK__Products__6107F394EC4D376A");
+
+                entity.ToTable("ProductsFromOrder", "Project0");
+
+                entity.Property(e => e.ProductsFromOrder1).HasColumnName("ProductsFromOrder");
+
+                entity.Property(e => e.DateModified).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.ProductsFromOrder)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ProductsF__Order__08B54D69");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductsFromOrder)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ProductsF__Produ__09A971A2");
             });
 
             OnModelCreatingPartial(modelBuilder);
