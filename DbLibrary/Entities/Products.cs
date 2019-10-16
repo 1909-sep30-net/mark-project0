@@ -7,6 +7,7 @@ namespace DbLibrary.Entities
     {
         public Products()
         {
+            Inventory = new HashSet<Inventory>();
             ProductsFromOrder = new HashSet<ProductsFromOrder>();
         }
 
@@ -15,6 +16,7 @@ namespace DbLibrary.Entities
         public decimal? ProductPrice { get; set; }
         public DateTime DateModified { get; set; }
 
+        public virtual ICollection<Inventory> Inventory { get; set; }
         public virtual ICollection<ProductsFromOrder> ProductsFromOrder { get; set; }
     }
 }

@@ -11,7 +11,8 @@
           "ClassLibrary1": "1.0.0",
           "DbLibrary": "1.0.0",
           "Microsoft.EntityFrameworkCore.Design": "3.0.0",
-          "Microsoft.EntityFrameworkCore.SqlServer": "3.0.0"
+          "Microsoft.EntityFrameworkCore.SqlServer": "3.0.0",
+          "NLog": "4.6.7"
         },
         "runtime": {
           "mark-project0.dll": {}
@@ -255,6 +256,14 @@
         "dependencies": {
           "System.Security.AccessControl": "4.5.0",
           "System.Security.Principal.Windows": "4.5.0"
+        }
+      },
+      "NLog/4.6.7": {
+        "runtime": {
+          "lib/netstandard2.0/NLog.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.6.7.10445"
+          }
         }
       },
       "runtime.native.System/4.3.0": {
@@ -827,6 +836,9 @@
         }
       },
       "ClassLibrary1/1.0.0": {
+        "dependencies": {
+          "NLog": "4.6.7"
+        },
         "runtime": {
           "ClassLibrary1.dll": {}
         }
@@ -834,7 +846,8 @@
       "DbLibrary/1.0.0": {
         "dependencies": {
           "ClassLibrary1": "1.0.0",
-          "Microsoft.EntityFrameworkCore.SqlServer": "3.0.0"
+          "Microsoft.EntityFrameworkCore.SqlServer": "3.0.0",
+          "NLog": "4.6.7"
         },
         "runtime": {
           "DbLibrary.dll": {}
@@ -1008,6 +1021,13 @@
       "sha512": "sha512-+FWlwd//+Tt56316p00hVePBCouXyEzT86Jb3+AuRotTND0IYn0OO3obs1gnQEs/txEnt+rF2JBGLItTG+Be6A==",
       "path": "microsoft.win32.registry/4.5.0",
       "hashPath": "microsoft.win32.registry.4.5.0.nupkg.sha512"
+    },
+    "NLog/4.6.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xSIzXrIF89Ww6yoJPvyBcu4JLgNiDiEaTT4GyVltZEeVIvkgSm9J/srUy1Yz0EXwbTv502l8knoCFrgNc/MUMA==",
+      "path": "nlog/4.6.7",
+      "hashPath": "nlog.4.6.7.nupkg.sha512"
     },
     "runtime.native.System/4.3.0": {
       "type": "package",

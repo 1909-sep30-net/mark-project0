@@ -1,14 +1,14 @@
 ﻿/*     functionality
-       place orders to store locations for customers
-       add a new customer
+       X - place orders to store locations for customers
+       X - add a new customer
        search customers by name
        display details of an order
        display all order history of a store location
        display all order history of a customer
-       input validation
-       exception handling
-       persistent data(SQL); no products, prices, customers, etc. hardcoded in C#
-       logging
+       X - input validation
+       X - exception handling
+       X - persistent data(SQL); no products, prices, customers, etc. hardcoded in C#
+       X - logging
        (optional: order history can be sorted by earliest, latest, cheapest, most expensive)
        (optional: get a suggested order for a customer based on his order history)
                        (optional: save some or all data to disk in JSON format)
@@ -21,6 +21,7 @@
  * dotnet ef dbcontext scaffold "Server=tcp:1909escalonasql.database.windows.net,1433;Initial Catalog=PokemonDb;Persist Security Info=False;User ID=nick;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" Microsoft.EntityFrameworkCore.SqlServer --startup-project ../EfDemo.App --force --output-dir Entities
 * make sure to edit with personal info.*/
 
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -32,44 +33,104 @@ using ClassLibrary1;
 using DBLibrary;
 using DbLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+//using System.IO;
+//using System.Security;
+//using System.Xml.Serialization;
 
 namespace mark_project0
 {
     class Program
     {
+        private static readonly NLog.ILogger s_logger =LogManager.GetCurrentClassLogger();
 
         //function to get user info
-        static Customer RegisterUser()                             //this needs to input the new user in the DB
+        static Customer RegisterUser() //this needs to input the new user in the DB
         {
-            //have user enter all info.
-            Console.WriteLine("\nPlease enter your First Name.");
-            string fName = Console.ReadLine();
-            Console.WriteLine("\nPlease enter your Last Name.");
-            string lName = Console.ReadLine();
-            //Console.WriteLine("Please enter your Street and home number.");
-            //string street = Console.ReadLine();
-            //Console.WriteLine("Please enter your City.");
-            //string city = Console.ReadLine();
-            //Console.WriteLine("Please enter your Zip Code.");
-            //int zip = Convert.ToInt32(Console.ReadLine());
+/*            //have user enter all info.
+            Console.WriteLine("Please enter your Street and home number.");
+            string street = Console.ReadLine();
+            Console.WriteLine("Please enter your City.");
+            string city = Console.ReadLine();
+            Console.WriteLine("Please enter your Zip Code.");
+            int zip = Convert.ToInt32(Console.ReadLine());*/
 
-            Customer customer1 = new Customer(fName, lName);
-            //customer1.CustomerFirstName = fName;
-            //customer1.CustomerLastName = lName;
+            //Customer customer1 = new Customer(fName, lName);
+            Customer customer1 = new Customer();
+            bool success = false;
+            while (success == false)
+            {
+                try
+                {
+                    Console.WriteLine("\nPlease enter your First Name.");
+                    string fName = Console.ReadLine();
+                    customer1.CustomerFirstName = fName;
+                    success = true;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    s_logger.Info(ex);
+                }
+            }
+
+            success = false;
+            while (success == false)
+            {
+                try
+                {
+                    Console.WriteLine("\nPlease enter your Last Name.");
+                    string lName = Console.ReadLine();
+                    customer1.CustomerLastName = lName;
+                    success = true;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    s_logger.Info(ex);
+                }
+            }
+
             return customer1;
         }//END OF Register User()
 
         static Customer SignInUser(Project0Context context)
         {
-            //have user enter all info.
-            Console.WriteLine("\nPlease enter your First Name.");
-            string fName = Console.ReadLine();
-            Console.WriteLine("\nPlease enter your Last Name.");
-            string lName = Console.ReadLine();
-            Customer customer1 = new Customer(fName, lName);
-            //var foundCustomer = DBLibrary.DbLibrary.ReadCustomer(context, customer1);
-            
-            //Console.WriteLine($"{foundCustomer.CustomerFirstName} - {foundCustomer.CustomerLastName}");
+            Customer customer1 = new Customer();
+            bool success = false;
+            while (success == false)
+            {
+                try
+                {
+                    Console.WriteLine("\nPlease enter your First Name.");
+                    string fName = Console.ReadLine();
+                    customer1.CustomerFirstName = fName;
+                    success = true;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    s_logger.Info(ex);
+                }
+            }
+
+            success = false;
+            while (success == false)
+            {
+                try
+                {
+                    Console.WriteLine("\nPlease enter your Last Name.");
+                    string lName = Console.ReadLine();
+                    customer1.CustomerLastName = lName;
+                    success = true;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    s_logger.Info(ex);
+                }
+            }
             return customer1;
 
         }//END OF SugnInUser()
@@ -81,8 +142,6 @@ namespace mark_project0
             optionsBuilder.UseSqlServer(config.connectionString);
             using (var db = new Project0Context(optionsBuilder.Options))
             {
-                DBRepository DbFuncs = new DBRepository(db);
-                //Mapper mapper1 = new Mapper(db);
                 Customer customer = new Customer();
                 Order order = new Order();
                 Location location = new Location();
@@ -93,221 +152,152 @@ namespace mark_project0
 
                     /*******************************log in or register the user*******************/
                     string userType;
-                    /*                    do
-                                        {
-                                            Console.WriteLine("Are you a returning user of do you need to register?");
-                                            Console.WriteLine("\n\n\tA - Register.\n\tB - Returning User.");
-                                            userType = Console.ReadLine();
-                                            userType = userType.ToUpper();  //to accept upper and lower case letters.                                   //NEEDS VALIDATION?
-                                        } while (!(userType.Equals("A") || userType.Equals("B")));
+                    do
+                    {
+                        Console.WriteLine("Are you a returning user of do you need to register?");
+                        Console.WriteLine("\n\n\tA - Register.\n\tB - Returning User.");
+                        userType = Console.ReadLine();
+                        userType = userType.ToUpper();  //to accept upper and lower case letters.
+                    } while (!(userType.Equals("A") || userType.Equals("B")));
 
-                                        switch (userType)
-                                        {
-                                            case "A":
-                                                customer = RegisterUser();                      //register the user
-                                                //DBLibrary.DbLibrary.AddCustomer(db, customer);  //add the new, VALIDATED, user to the DB.
-                                                break;
-                                            case "B":
-                                                customer = SignInUser(db);                      //sign the user in.
-                                                break;
-                                        }
-                    */
+                    switch (userType)
+                    {
+                        case "A":
+                            bool custExists = false;
+                            while(custExists == false)
+                            {
+                                customer = RegisterUser();       //register the user
+                                custExists = DBRepository.AddCustomer(db, customer);  
+                                //add the new, VALIDATED, user to the DB. 
+                                //CHECK to make sure this User doesn't already exist.
+                            }
+                            break;
+                        case "B":
+                            string custExists2 = null;
+                            while(custExists2 == null)
+                            {
+                                customer = SignInUser(db); //sign the user in.
+                                customer = DBRepository.ReadCustomer(db, customer);
+                                if(customer != null)
+                                {
+                                    custExists2 = "good";
+                                }
+                            }
+                            break;
+                    }
+
 
                     /**********************choose the location*****/
-                    //var allLocations = DBLibrary.DBRepository.ReadAllLocations(db);
+                    var allLocations = DBRepository.ReadAllLocations(db);//returns a list of locations
                     string locChoice;
                     int finalLocChoice;
-                    /*                    do
-                                        {
-                                            foreach (var item in allLocations)
-                                            {
-                                                Console.WriteLine($"{item.locID} - {item.LocationName}\n");
-                                            }
-                                            Console.WriteLine("Please choose a number from the above list.");
-                                            locChoice = Console.ReadLine();
-                                            finalLocChoice = Convert.ToInt32(locChoice);
-                                            //location = allLocations.Find(finalLocChoice);
-                                        } while (location == null);
-                    */
+                    do
+                    {
+                        foreach (var item in allLocations)
+                        {
+                            Console.WriteLine($"{item.LocationId} - {item.LocationName}\n");
+                        }
+                        Console.WriteLine("Please choose a number from the above list.");
+                        locChoice = Console.ReadLine();
+                        finalLocChoice = Convert.ToInt32(locChoice);
+                        location = DBRepository.ReadLocationById(db, finalLocChoice);
+                    } while (location == null);
+
+                    Console.WriteLine($"You chose our {location.LocationName} location. Happy shopping!");
 
 
                     /*************************Make the order****************************/
-                    int prodChoice = -1;
+                    //int prodChoice;
                     string choice;
-                    // var allProductsInInventory = DBLibrary.DbLibrary.ReadLocationInventory(db, location.LocationName);//get all the products in the chosen locations inventory
-                    /*                    do
-                                        {
-                                            Console.WriteLine("\tPlease choose from the available product numbers.\n\tYou may keep placing products until\n\tyou enter 0 to check out.");
-                                            //display all products.
-                                      *//*      foreach (var item in allProductsInInventory)
-                                            {
-                                                Console.WriteLine(item);
+                    string choiceQuantity;
+                    int choiceQuantityInt;
+                    //get all the products in the chosen locations inventory
+                    var allProductsInInventory = DBRepository.ReadLocationInventory(db, location.LocationName);
 
-                                                //Console.WriteLine($"{item.ProductId}\t{item.ProductName} = {item.ProductPrice}. {item.ProductQuantity} in stock.\n");
-                                                //Console.WriteLine($"{item.GetType().GetProperty(item).GetValue(item, null)}");
-                                            }*//*
-                                            Console.WriteLine("0 - Check out.");
-                                            choice = Console.ReadLine();
-                                            prodChoice = Convert.ToInt32(choice);
+                    var allProducts = DBRepository.ReadAllProducts(db);
 
 
-                                        }while(!prodChoice.Equals(0));
-
-                    */
-
-                    /* GET ALL LOCATIONS BACK   
-                                      IEnumerable<Locations> ilist = new List<Locations>();
-
-                                      ilist = DBRepository.ReadAllLocations(db);
-                                      Console.WriteLine("main......\n");
-
-                                      ilist.ToList();
-                                      Console.WriteLine("main......\n");
-                                      Console.WriteLine(ilist.Count());
-
-
-
-
-                                                          
-                                                      }
-                                      */
-/*GET ALL PRODUCTS             
- *                  IEnumerable<Products> ilist = new List<Products>();
-                    ilist = DBRepository.ReadAllProducts(db).ToList();
-                    foreach (var item in ilist)
+                    do
                     {
-                        Console.WriteLine($"In main ProductName =>{item.ProductName}");
-                    }*/
+                        Console.WriteLine("\n\tPlease choose from the available product numbers.\n\tEnter a product number and hit enter." +
+                            "\n\tYou may keep placing products until\n\tyou enter 'checkout' to check out.");
+                        
+                        //display all products from this location.
+                        foreach (var item in allProductsInInventory)
+                        {
+                            int testNum = item.ProductId;
+                            Product prod = DBRepository.ReadProductById( db,item.ProductId);
+                            //Console.WriteLine($"this is item.ProductID=>{item.ProductId} ... This is testNum=>{testNum} ...this is prod.ProductID=>{prod.ProductID}");
+                            Console.WriteLine($"\t{prod.ProductID} - {prod.ProductName} = {prod.ProductPrice}. {item.ProductQuantity} in stock.");
+                        }
+                        Console.WriteLine("\tcheckout - Check out.");
+                        choice = Console.ReadLine();
+                        choice = choice.ToLower();
+                        if (choice.Equals("checkout"))
+                        {
+                            continue;
+                        }
+                        int prodIdChoice = Convert.ToInt32(choice);
+                        
+                        //make sure the name entered is in the list.
+                        if (allProductsInInventory.Exists(x => x.ProductId == prodIdChoice) == false)
+                        {
+                            Console.WriteLine("\n\t\tYour choice is not in the list.");
+                            continue;
+                        }
+                        else
+                        {
+                            //get the chosen named Product from the Products table.
+                            Inventory choice3 = allProductsInInventory.Find(x => x.ProductId.Equals(prodIdChoice));
+                            Product prod = DBRepository.ReadProductById(db, choice3.ProductId);
 
-/****/
 
+                            Console.WriteLine($"\nHow Many {prod.ProductName}'s would you like? There are {choice3.ProductQuantity} available");
+                            
+                            //Console.WriteLine($"found product => {choice3.ProductName} - {choice3.ProductPrice} - {choice3.ProductQuantity}");
+                            choiceQuantity = Console.ReadLine();
+                            choiceQuantityInt = Convert.ToInt32(choiceQuantity);
+                            
+                            if(choiceQuantityInt > choice3.ProductQuantity)
+                            {
+                                Console.WriteLine($"\nThere are not enough {prod.ProductName} available. \nThe maximum you may add is {choice3.ProductQuantity}. Try again.\n");
+                                continue;
+                            }
+                            else
+                            {
+                                //check if the item has already been ordered. if not, add it and decrement amount available.
+                                if (order.itemsOrdered.ContainsKey(prod.ProductName) == false)
+                                {
+                                    order.itemsOrdered.Add(prod.ProductName, choiceQuantityInt);
+                                    choice3.ProductQuantity -= choiceQuantityInt;//decrement amount in context
+                                }
+                                else
+                                {
+                                    //add the previously ordered quantity back to the inventory then subtract the newly ordered amount
+                                    choice3.ProductQuantity = choice3.ProductQuantity + order.itemsOrdered[prod.ProductName];
+                                    order.itemsOrdered[prod.ProductName] = choiceQuantityInt;
+                                    choice3.ProductQuantity = choice3.ProductQuantity - choiceQuantityInt;//decrement amount in context
+                                    Console.WriteLine($"\n\tYour desired amount of {prod.ProductName} has been updated to {order.itemsOrdered[prod.ProductName]}");
+                                }
+                            }
+                        }
+                        //print current state of customers order
+                        Console.WriteLine("\nYou current order is... ");
+                        foreach (var item in order.itemsOrdered)
+                        {
+                            Console.WriteLine($"=== {item.Key} === {item.Value}=");
+                        }
 
+                    } while (!choice.Equals("checkout"));//end of ordering loop
+                    order.LocationID = location.locID;
+                    order.CustomerID = customer.CustID;
+                    DBRepository.AddOrder(db,order);
+                    db.SaveChanges();
 
                     finished = true;
                 }//END OF WHILE LOOP
-
                 Console.WriteLine("\nDONE\n");
             }//END OF USING
         }//END OF MAIN
     }//END OF CLASS
 }//END OF NAMESPACE
-
- /*
- var connectionString = config.connectionString;
-
- try
- {
-     using var connection = new SqlConnection(connectionString);
-     connection.Open();
-     using DbCommand command = new SqlCommand("SELECT * FROM Customers;", connection);
-     using DbDataReader reader = await command.ExecuteReaderAsync();
-
-     if (reader.HasRows)
-     {
-         Console.WriteLine("Successfully accessed the DB");
-     }
-     else
-     {
-         Console.WriteLine("DID NOT successfully access the DB");
-     }
-
-     await connection.CloseAsync();
- }
- catch(SqlException ex)
- {
-     Console.WriteLine($"\n\tError => {ex.Message}\n");
- }*/
-
-//Products product1 = new Products();
-/*            product1.ProductName = "orange";
-            product1.ProductPrice = 12;
-            DBLibrary.DbLibrary.AddProduct(product1);*/
-
-//test ReadProducts()
-//product1 = DBLibrary.DbLibrary.ReadProduct(product1);
-//Console.WriteLine($"This is Product1 =>{product1.ProductId} - {product1.ProductName} - {product1.ProductPrice}");
-
-//test ReadAllProducts
-//var prodList = DBLibrary.DbLibrary.ReadAllProducts();
-//foreach (var item in prodList)
-//{
-//    Console.WriteLine($"==>{item.ProductId} - {item.ProductName} - {item.ProductPrice} - {item.DateModified}<==");
-//}
-
-
-
-/*
-Product product0 = new Product("apples",10,10);
-Product product1 = new Product("oranges",11,11);
-Product product2 = new Product("zuccini",12,12);
-
-DbLibrary.AddProduct(product0);
-DbLibrary.AddProduct(product1);
-DbLibrary.AddProduct(product2);
-
-products = DbLibrary.ReadAllProducts();
-Console.WriteLine(products.Count);
-foreach(Product x in products)
-{
-    Console.WriteLine($"{x.prodID}, {x.ProductName}, {x.ProductPrice}, {x.ProductQuantity}");
-    Console.WriteLine();
-}
-*/
-
-/*            
- *      Customer customer1 = new Customer("Mark", "Moore", "432 MIllbrook Ln.","Crowley", 11111);
-        Customer customer2 = new Customer("Ethan", "Moore", "1 MIllbrook Ln.", "Euless", 22222);
-        Customer customer3 = new Customer("Hope", "Moore", "2 MIllbrook Ln.", "Bedford", 33333);
-
-        DbLibrary.AddCustomer(customer1);
-        DbLibrary.AddCustomer(customer2);
-        DbLibrary.AddCustomer(customer3);
-
-        customers = DbLibrary.ReadAllCustomers();
-        Console.WriteLine(customers.Count);
-        foreach(Customer x in customers)
-        {
-            Console.WriteLine($"{x.CustID}, {x.CustomerFirstName}, {x.CustomerLastName}, {x.CustomerStreet}, {x.CustomerCity}, {x.CustomerZipCode}");
-            Console.WriteLine();
-        }
-*/
-/*
-       //get the data and THEN send it all into the object to be verified
-       Console.WriteLine("Welcome to your personal online shopping App!");
-       Console.WriteLine("Please register or log in.\n\nEnter 1 for Current User\n Enter 2 to register.");
-       int user;
-       do
-       {
-           user = Convert.ToInt32(Console.ReadLine()); //get a choice from the user
-       } while (user != 1 || user != 2);
-
-       switch (user)
-       {
-           case 1:Customer newUser = RegisterUser();//send to register page
-
-               break;
-           case 2://send to log in login page
-               break;
-       }
-
-       Console.WriteLine("Please Choose a store location.");
-
-       //get store locations with a function
-       //Location loc = new Location();
-       //List<Location> locations = ClassLibrary1.Location.ReadAllLocations(locations);
-
-       int store;
-       do
-       {
-           store = Convert.ToInt32(Console.ReadLine()); //get a choice from the user
-       } while (store != 1 || store != 2);
-
-       switch (store)
-       {
-           case 1:
-               RegisterUser();//send to register page
-               break;
-
-           case 2://send to log in login page
-               break;
-*/

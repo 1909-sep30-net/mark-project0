@@ -18,40 +18,60 @@
  */
 
 
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClassLibrary1;
 using DbLibrary.Entities;
 using Microsoft.EntityFrameworkCore;
-//using DbLibrary.Mapper;
 
 namespace DBLibrary
 {
     public class DBRepository
     {
+        private static readonly NLog.ILogger s_logger = LogManager.GetCurrentClassLogger();
+
+
         /**************************************
         * INVENTORY FUNCTIONS BELOW
         * ************************************/
-
-        private static Project0Context _dbContext;
-
-        public static void ReadLocationInventory(Project0Context context, string locationName)
+        /// <summary>
+        /// this method takes the context and location name and returns a List of Inventory objects in 
+        /// that locations inventory.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="locationName"></param>
+        /// <returns>List<Products> </returns>
+        public static List<Inventory> ReadLocationInventory(Project0Context context, string locationName)
         {
             //find all the products for that location
-            Console.WriteLine("Reading the inventory");
+            //Console.WriteLine("Reading the inventory");
 
+            var result = context.Inventory
+                .Where(i => i.LocationName == locationName).ToList();
 
-            //var result = context.Inventory
-               // .Where(i => i.ProductName == locationName).ToList();
-
-            /*            foreach (var item in result)
-                        {
-                            Console.WriteLine($"{item.ProductId}\t{item.ProductName} = {item.ProductPrice}. {item.ProductQuantity} in stock.\n");
-                        }*/
-           // return result;
+            /*          var result = context.Products
+                      .Join(context.Inventory
+                      .Where(i => i.LocationName == locationName),
+                            m => m.ProductId,
+                            p => p.ProductId,
+                            (m, p) => m)
+                              .ToList();*/
+            /*            var result = (from d in context.Products
+                                         join f in context.Inventory
+                                         on d.ProductId equals f.ProductId
+                                         where f.LocationName == locationName
+                                         select new
+                                         {
+                                             pName = d.ProductName,
+                                             pPrice = d.ProductPrice,
+                                             quantity = f.ProductQuantity,
+                                             location = f.LocationName
+                                         }).ToList();
+            */
+            return result;
         }
-
 
         /**************************************
          * PRODUCT FUNCTIONS BELOW
@@ -93,22 +113,27 @@ namespace DBLibrary
         ///<summary>
         ///returns a list of all the Products
         ///</summary>
-        public static DbSet<Products> ReadAllProducts(Project0Context context)
+        public static List<Products> ReadAllProducts(Project0Context context)
         {
-            return context.Products;
-/*            //find all the products in the array
+            return context.Products.ToList();
+/*            
+            //find all the products in the array
             Console.WriteLine("Reading all products");
-
             List<Product> prods = new List<Product>();
-
             foreach (var p in context.Products)
             {
                 //Product prod = new Product();
                 //prod = Mapper.MapProduct(p);
                 prods.Add(Mapper.MapProduct(p));
-            }*/
+            }*/  
+        }
 
-            
+        public static Product ReadProductById(Project0Context context, int prodId)
+        {
+            var prod = context.Products
+                .Where(x => x.ProductId == prodId).First();
+
+            return Mapper.MapProduct(prod);
         }
 
         ///<summary>
@@ -165,8 +190,9 @@ namespace DBLibrary
 
         ///<summary>
         ///</summary>
-        public static DbSet<Locations> ReadAllLocations(Project0Context db)
+        public static List<Locations> ReadAllLocations(Project0Context db)
         {
+            return db.Locations.ToList();
             //make a list of locations
             //IEnumerable<Location> locationsList = new List<Location>();
 /*            foreach (var l in db.Locations)
@@ -177,11 +203,27 @@ namespace DBLibrary
                 Location m = new Location();
                 m = Mapper.MapLocation(l);
                 Console.WriteLine($"CITY =>{m.LocationCity}");
-
                 db.Locations.Add(l);
-            }*/
-            //Console.WriteLine(locationsList.Count());
-            return db.Locations;
+            }*/            
+        }
+        /// <summary>
+        ///takes a location ID and returns the Location object
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="locNum"></param>
+        /// <returns>Location object</returns>
+        public static Location ReadLocationById(Project0Context context, int locNum)
+        {
+            var loc = context.Locations
+                .Where(x => x.LocationId == locNum)
+                .FirstOrDefault();
+
+            if (loc == null)
+            {   
+                throw new NullReferenceException("That location does not exist. Please try again.");
+            }
+
+            return Mapper.MapLocation(loc);
         }
 
         ///<summary>
@@ -222,27 +264,48 @@ namespace DBLibrary
         /**************************************
          * CUSTOMER FUNCTIONS BELOW
          * *************************************/
+         
+            ///
+            ///
 
-        public static void AddCustomer(Project0Context context, Customer customer)
+        public static bool AddCustomer(Project0Context context, Customer customer)
         {
-
             //needs to be mapped first!!!
             //Customer
-            context.Add(customer);
-            context.SaveChanges();
+            context.Add(Mapper.MapCustomer(customer));
+
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("There was an error Adding your account. Please try again with a different name.");
+                s_logger.Info(ex);
+                return false;
+            }
+            return true;
         }
 
 
         ///<summary>
         ///This method takes the verified customer info from main and inserts it into the DB
         ///</summary>
-        public static void ReadCustomer(Project0Context context, Customer customer)
+        public static Customer ReadCustomer(Project0Context context, Customer customer)
         {
-            //Customer = 
-            //var result = _db.Customers.Where(c => c.CustomerFirstName == customer.CustomerFirstName && c.CustomerLastName == customer.CustomerLastName);
-            //need to typedef the result
-            //Customers test1 = result.Cast<Customers>();
-            //return result.FirstOrDefault();
+            var result = context.Customers
+                .Where(c => c.CustomerFirstName == customer.CustomerFirstName && c.CustomerLastName == customer.CustomerLastName)
+                .FirstOrDefault();
+
+            if (result == null)
+            {
+                Console.WriteLine("Sorry, That customer was not found.");
+                return null;
+            }
+            var result1 = Mapper.MapCustomer(result);
+
+            return result1;
         }
 
         ///<summary>
@@ -278,9 +341,30 @@ namespace DBLibrary
         ///<summary>
         ///This option will take a complete order object and insert it into the DB
         ///</summary>
-        public static void AddOrder(Project0Context context, Orders order)
+        public static void AddOrder(Project0Context context, Order order)
         {
-            //return orders;
+            Orders orders = new Orders();
+            orders.CustomerId = order.CustomerID;
+            orders.LocationId = order.LocationID;
+            orders.OrderId = order.OrderID;
+
+            foreach (var item in order.itemsOrdered)
+            {
+                //make ProductsFromOrder object for each product
+                ProductsFromOrder prodsInsert = new ProductsFromOrder();
+                /* OrderId ProductId  int Quantity */
+                prodsInsert.OrderId = order.OrderID;
+                prodsInsert.Quantity = item.Value;
+                prodsInsert.ProductId = context.Products
+                    .Where(x => x.ProductName == item.Key)
+                    .Select(x => x.ProductId)
+                    .First();
+
+                orders.ProductsFromOrder.Add(prodsInsert);
+            }
+            context.Add(orders);
+            context.SaveChanges();
+
         }
 
         ///<summary>

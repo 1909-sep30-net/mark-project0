@@ -40,7 +40,7 @@ DROP TABLE IF EXISTS Project0.Project0.Inventory; --in case Inventory table alre
 --create inventory table
 CREATE TABLE Project0.Inventory(
 	InventoryId		INT			NOT NULL	PRIMARY KEY	IDENTITY,
-	ProductName		NVARCHAR(255)			NOT NULL,
+	ProductID		INT			NOT NULL	FOREIGN KEY REFERENCES Project0.Products(ProductId),
 	LocationName	NVARCHAR(255)			NOT NULL,
 	ProductPrice	MONEY					DEFAULT 0,
 	ProductQuantity	INT			NOT NULL	DEFAULT 0,
