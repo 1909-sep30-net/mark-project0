@@ -76,8 +76,6 @@ namespace DBLibrary
             {
                 Console.WriteLine($"\t={item.Key}= ={item.Value}=");
             }
-
-          
         }
 
         /// <summary>

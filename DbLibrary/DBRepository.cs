@@ -16,8 +16,6 @@
  *    (so that the connection string is not put on the public internet)
  * 5. any time you change the structure of the tables (DDL), go to step 3.
  */
-
-
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -31,8 +29,6 @@ namespace DBLibrary
     public class DBRepository
     {
         private static readonly NLog.ILogger s_logger = LogManager.GetCurrentClassLogger();
-
-
         /**************************************
         * INVENTORY FUNCTIONS BELOW
         * ************************************/
@@ -46,36 +42,21 @@ namespace DBLibrary
         public static List<Inventory> ReadLocationInventory(Project0Context context, string locationName)
         {
             //find all the products for that location
-            //Console.WriteLine("Reading the inventory");
-
             var result = context.Inventory
                 .Where(i => i.LocationName == locationName).ToList();
-
-            /*          var result = context.Products
-                      .Join(context.Inventory
-                      .Where(i => i.LocationName == locationName),
-                            m => m.ProductId,
-                            p => p.ProductId,
-                            (m, p) => m)
-                              .ToList();*/
-            /*            var result = (from d in context.Products
-                                         join f in context.Inventory
-                                         on d.ProductId equals f.ProductId
-                                         where f.LocationName == locationName
-                                         select new
-                                         {
-                                             pName = d.ProductName,
-                                             pPrice = d.ProductPrice,
-                                             quantity = f.ProductQuantity,
-                                             location = f.LocationName
-                                         }).ToList();
-            */
             return result;
         }
 
         /**************************************
          * PRODUCT FUNCTIONS BELOW
          * ************************************/
+
+ /*       public static void AddProduct(Product product)
+        {
+            //remember to save.
+            Products prods = Mapper.MapProduct();
+        }*/
+
         ///<summary>
         ///This option not required at this time
         ///</summary>
@@ -113,19 +94,10 @@ namespace DBLibrary
         ///<summary>
         ///returns a list of all the Products
         ///</summary>
+        ///
         public static List<Products> ReadAllProducts(Project0Context context)
         {
             return context.Products.ToList();
-/*            
-            //find all the products in the array
-            Console.WriteLine("Reading all products");
-            List<Product> prods = new List<Product>();
-            foreach (var p in context.Products)
-            {
-                //Product prod = new Product();
-                //prod = Mapper.MapProduct(p);
-                prods.Add(Mapper.MapProduct(p));
-            }*/  
         }
 
         public static Product ReadProductById(Project0Context context, int prodId)
@@ -155,7 +127,7 @@ namespace DBLibrary
 
 
         ///<summary>
-        //////This option not required at this time
+        ///This option not required at this time
         ///</summary>
         //public static Product SearchProducts(Product product)
         //{
@@ -166,9 +138,6 @@ namespace DBLibrary
          * LOCATION FUNCTIONS BELOW
          * *************************************/
 
-        ///<summary>
-        //////This option not required at this time
-        ///</summary>
         //public static int AddLocation(Location location)
         //{
         //    using (var db = new Project0Context())
@@ -189,23 +158,13 @@ namespace DBLibrary
         //}
 
         ///<summary>
+        ///takes a context and returns a List of Locations
         ///</summary>
         public static List<Locations> ReadAllLocations(Project0Context db)
         {
             return db.Locations.ToList();
-            //make a list of locations
-            //IEnumerable<Location> locationsList = new List<Location>();
-/*            foreach (var l in db.Locations)
-            {
-                Console.WriteLine($"ID =>{l.LocationId}");
-                //Location location = new Location();
-                //prod = Mapper.MapProduct(p);
-                Location m = new Location();
-                m = Mapper.MapLocation(l);
-                Console.WriteLine($"CITY =>{m.LocationCity}");
-                db.Locations.Add(l);
-            }*/            
         }
+
         /// <summary>
         ///takes a location ID and returns the Location object
         /// </summary>
@@ -251,7 +210,6 @@ namespace DBLibrary
 
         //}
 
-
         ///<summary>
         ///This option not required at this time
         ///</summary>
@@ -260,26 +218,26 @@ namespace DBLibrary
         //    return location;
         //}
 
-
         /**************************************
          * CUSTOMER FUNCTIONS BELOW
          * *************************************/
          
-            ///
-            ///
-
+        ///<summary>
+        ///takes a context and Customer. Returns a true bool to indicate insertion was successfull
+        /// </summary>
         public static bool AddCustomer(Project0Context context, Customer customer)
         {
-            //needs to be mapped first!!!
-            //Customer
-            context.Add(Mapper.MapCustomer(customer));
-
+            Customers entity = Mapper.MapCustomer(customer);
+            context.Customers.Add(entity);//maybe the context still has the first wrong Customer?
             try
             {
+                //context.Remove(entity);
                 context.SaveChanges();
             }
+
             catch (DbUpdateException ex)
             {
+                //context.Customers.Remove(Mapper.MapCustomer(customer));
                 Console.WriteLine(ex.Message);
                 Console.WriteLine("There was an error Adding your account. Please try again with a different name.");
                 s_logger.Info(ex);
@@ -288,9 +246,9 @@ namespace DBLibrary
             return true;
         }
 
-
         ///<summary>
-        ///This method takes the verified customer info from main and inserts it into the DB
+        ///This method takes as context and the verified customer info from main and inserts it into the DB
+        ///Returns the customer from the DB
         ///</summary>
         public static Customer ReadCustomer(Project0Context context, Customer customer)
         {
@@ -304,7 +262,6 @@ namespace DBLibrary
                 return null;
             }
             var result1 = Mapper.MapCustomer(result);
-
             return result1;
         }
 
@@ -333,13 +290,12 @@ namespace DBLibrary
         //    return Customers;
         //}
 
-
         /**************************************
          * ORDER FUNCTIONS BELOW
          * *************************************/
 
         ///<summary>
-        ///This option will take a complete order object and insert it into the DB
+        ///This option takes a DB context and an order object and inserts it into the DB
         ///</summary>
         public static void AddOrder(Project0Context context, Order order)
         {
@@ -352,7 +308,6 @@ namespace DBLibrary
             {
                 //make ProductsFromOrder object for each product
                 ProductsFromOrder prodsInsert = new ProductsFromOrder();
-                /* OrderId ProductId  int Quantity */
                 prodsInsert.OrderId = order.OrderID;
                 prodsInsert.Quantity = item.Value;
                 prodsInsert.ProductId = context.Products
@@ -364,23 +319,51 @@ namespace DBLibrary
             }
             context.Add(orders);
             context.SaveChanges();
-
         }
 
         ///<summary>
         ///This option will take the details of an order inputted by the user and searches for a matching order. 
         ///Then returns the order to main for display
         ///</summary>
-        public static Orders ReadOrder(Project0Context context, Orders order)
+        public static Order ReadOrderByOrderId(Project0Context context, int ID)
         {
-            return order;
+            var order1 = context.Orders
+                .Where(x => x.OrderId == ID)
+                .First();
+
+                //create an Order obj and populate itwith custID OrderID LocID
+                Order custsOrder = new Order();
+                custsOrder.CustomerID = order1.CustomerId;
+                custsOrder.LocationID = order1.LocationId;
+                custsOrder.OrderID = order1.OrderId;
+
+                //get products based on the orderID
+                var prods1 = context.ProductsFromOrder
+                    .Where(x => x.OrderId == ID)
+                    .ToList();
+
+                foreach (var x in prods1)
+                {
+                    custsOrder.itemsOrdered.Add(GetProdNameById(context, x.ProductId), x.Quantity);
+                }
+
+                return custsOrder;
+        }
+
+        public static string GetProdNameById(Project0Context context, int prodID)
+        {
+            var name = context.Products
+                .Where(x => x.ProductId == prodID).First();
+
+            return name.ProductName;
         }
 
         ///<summary>
+        ///this takes a DB context and returns a List of all orders
         ///</summary>
-        public static DbSet<Orders> ReadAllOrders(Project0Context context)
+        public static List<Orders> ReadAllOrders(Project0Context context)
         {
-            return context.Orders;
+            return context.Orders.ToList();
         }
 
         ///<summary>
@@ -398,6 +381,5 @@ namespace DBLibrary
         //{
         //    return orders;
         //}
-
     }
 }

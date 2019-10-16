@@ -1,10 +1,10 @@
 ﻿/*     functionality
        X - place orders to store locations for customers
        X - add a new customer
-       search customers by name
+       X - search customers by name - DONE AS PART OF LOGGING IN.
        display details of an order
-       display all order history of a store location
-       display all order history of a customer
+       X - display all order history of a store location
+       X - display all order history of a customer
        X - input validation
        X - exception handling
        X - persistent data(SQL); no products, prices, customers, etc. hardcoded in C#
@@ -133,7 +133,7 @@ namespace mark_project0
             }
             return customer1;
 
-        }//END OF SugnInUser()
+        }//END OF SignInUser()
 
         static void Main(string[] args)
         {
@@ -148,9 +148,7 @@ namespace mark_project0
 
                 while (finished.Equals(false))
                 {
-
-
-                    /*******************************log in or register the user*******************/
+                    /*******************log in or register the user*******************/
                     string userType;
                     do
                     {
@@ -164,27 +162,74 @@ namespace mark_project0
                     {
                         case "A":
                             bool custExists = false;
-                            while(custExists == false)
+                            while (custExists == false)
                             {
                                 customer = RegisterUser();       //register the user
-                                custExists = DBRepository.AddCustomer(db, customer);  
+                                custExists = DBRepository.AddCustomer(db, customer);
                                 //add the new, VALIDATED, user to the DB. 
-                                //CHECK to make sure this User doesn't already exist.
                             }
                             break;
                         case "B":
                             string custExists2 = null;
-                            while(custExists2 == null)
+                            while (custExists2 == null)
                             {
                                 customer = SignInUser(db); //sign the user in.
                                 customer = DBRepository.ReadCustomer(db, customer);
-                                if(customer != null)
+                                if (customer != null)
                                 {
                                     custExists2 = "good";
                                 }
                             }
                             break;
                     }
+
+                    /***************************CHOOSE TO SEARCH OR PLACE AN ORDER***********************/
+                    bool quitter1 = false;
+                    do
+                    {
+                        do
+                        {
+                            Console.WriteLine("\n Would you like to continue to the ordering process, " +
+                                "or would you like to search for things??");
+                            Console.WriteLine("\n\n\tA - Proceed to order.\n\tB - Search.");
+                            userType = Console.ReadLine();
+                            userType = userType.ToUpper();  //to accept upper and lower case letters.
+                        } while (!(userType.Equals("A") || userType.Equals("B")));
+
+                        switch (userType)
+                        {
+                            case "A":
+                                Console.WriteLine("\n\t.......Proceeding to the ordering page.......");
+                                quitter1 = true;
+                                break;
+                            case "B":
+                                searching.goSearching(db);
+                                break;
+                        }
+                        if (quitter1 == true)
+                        {
+                            break;
+                        }
+
+                        Console.WriteLine("Would you like to START OVER or QUIT?\n\t\tType START OVER or QUIT");
+                        string answer = Console.ReadLine();
+                        answer = answer.ToLower();
+                        if (answer.Equals("start over"))
+                        {
+                            //continue;
+                        }
+                        else
+                        {
+                            quitter1 = true;
+                            System.Environment.Exit(0);
+                        }
+
+                    } while (quitter1 == false);
+
+
+
+
+
 
 
                     /**********************choose the location*****/
@@ -237,7 +282,8 @@ namespace mark_project0
                         {
                             continue;
                         }
-                        int prodIdChoice = Convert.ToInt32(choice);
+                        int prodIdChoice;
+                        prodIdChoice = Convert.ToInt32(choice);
                         
                         //make sure the name entered is in the list.
                         if (allProductsInInventory.Exists(x => x.ProductId == prodIdChoice) == false)
@@ -296,7 +342,7 @@ namespace mark_project0
 
                     finished = true;
                 }//END OF WHILE LOOP
-                Console.WriteLine("\nDONE\n");
+                Console.WriteLine("\n\n\t============= Thank You for shopping with us. =============\n");
             }//END OF USING
         }//END OF MAIN
     }//END OF CLASS
