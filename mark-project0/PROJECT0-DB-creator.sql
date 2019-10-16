@@ -6,6 +6,7 @@
 --CREATE SCHEMA Project0; --create the schema for the DB
 
 GO
+--DELETE FROM Project0.Customers WHERE CustomerFirstName = 'Mark';
 
 --SELECT * FROM Project0.ProductsFromOrder;
 --SELECT * FROM Project0.Inventory;
@@ -28,6 +29,9 @@ CREATE TABLE Project0.Customers(
 	CustomerLastName	NVARCHAR(255)	NOT NULL,
 	DateModified		DATETIME2		NOT NULL	DEFAULT (GETDATE())
 	);
+
+CREATE UNIQUE NONCLUSTERED INDEX CustName ON Project0.Customers (CustomerFirstName,
+CustomerLastName);
 
 --create the Locations table 
 CREATE TABLE Project0.Locations(

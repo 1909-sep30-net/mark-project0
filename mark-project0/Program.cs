@@ -48,6 +48,13 @@ namespace mark_project0
         //function to get user info
         static Customer RegisterUser() //this needs to input the new user in the DB
         {
+/*            //have user enter all info.
+            Console.WriteLine("Please enter your Street and home number.");
+            string street = Console.ReadLine();
+            Console.WriteLine("Please enter your City.");
+            string city = Console.ReadLine();
+            Console.WriteLine("Please enter your Zip Code.");
+            int zip = Convert.ToInt32(Console.ReadLine());*/
 
             //Customer customer1 = new Customer(fName, lName);
             Customer customer1 = new Customer();
@@ -84,6 +91,7 @@ namespace mark_project0
                     s_logger.Info(ex);
                 }
             }
+
             return customer1;
         }//END OF Register User()
 
@@ -140,9 +148,7 @@ namespace mark_project0
 
                 while (finished.Equals(false))
                 {
-
-
-                    /*******************************log in or register the user*******************/
+                    /*******************log in or register the user*******************/
                     string userType;
                     do
                     {
@@ -161,7 +167,6 @@ namespace mark_project0
                                 customer = RegisterUser();       //register the user
                                 custExists = DBRepository.AddCustomer(db, customer);
                                 //add the new, VALIDATED, user to the DB. 
-                                //CHECK to make sure this User doesn't already exist.
                             }
                             break;
                         case "B":
@@ -180,7 +185,7 @@ namespace mark_project0
 
                     /***************************CHOOSE TO SEARCH OR PLACE AN ORDER***********************/
                     bool quitter1 = false;
-                    do 
+                    do
                     {
                         do
                         {
