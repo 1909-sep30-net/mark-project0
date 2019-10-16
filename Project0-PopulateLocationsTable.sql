@@ -7,6 +7,6 @@ INSERT INTO Project0.Locations (LocationName) VALUES ('New York');
 INSERT INTO Project0.Locations (LocationName) VALUES ('Paris');
 INSERT INTO Project0.Locations (LocationName) VALUES ('Sao Paulo');
 
-SELECT * FROM Project0.Inventory;
 
+SELECT * FROM Project0.Inventory;
 SELECT * FROM Project0.Locations;

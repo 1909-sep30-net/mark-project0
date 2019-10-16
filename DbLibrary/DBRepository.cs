@@ -47,35 +47,22 @@ namespace DBLibrary
         {
             //find all the products for that location
             //Console.WriteLine("Reading the inventory");
-
             var result = context.Inventory
                 .Where(i => i.LocationName == locationName).ToList();
-
-            /*          var result = context.Products
-                      .Join(context.Inventory
-                      .Where(i => i.LocationName == locationName),
-                            m => m.ProductId,
-                            p => p.ProductId,
-                            (m, p) => m)
-                              .ToList();*/
-            /*            var result = (from d in context.Products
-                                         join f in context.Inventory
-                                         on d.ProductId equals f.ProductId
-                                         where f.LocationName == locationName
-                                         select new
-                                         {
-                                             pName = d.ProductName,
-                                             pPrice = d.ProductPrice,
-                                             quantity = f.ProductQuantity,
-                                             location = f.LocationName
-                                         }).ToList();
-            */
             return result;
         }
 
         /**************************************
          * PRODUCT FUNCTIONS BELOW
          * ************************************/
+
+ /*       public static void AddProduct(Product product)
+        {
+            //remember to save.
+            Products prods = Mapper.MapProduct();
+        }*/
+
+
         ///<summary>
         ///This option not required at this time
         ///</summary>
@@ -113,19 +100,10 @@ namespace DBLibrary
         ///<summary>
         ///returns a list of all the Products
         ///</summary>
+        ///
         public static List<Products> ReadAllProducts(Project0Context context)
         {
             return context.Products.ToList();
-/*            
-            //find all the products in the array
-            Console.WriteLine("Reading all products");
-            List<Product> prods = new List<Product>();
-            foreach (var p in context.Products)
-            {
-                //Product prod = new Product();
-                //prod = Mapper.MapProduct(p);
-                prods.Add(Mapper.MapProduct(p));
-            }*/  
         }
 
         public static Product ReadProductById(Project0Context context, int prodId)
@@ -155,7 +133,7 @@ namespace DBLibrary
 
 
         ///<summary>
-        //////This option not required at this time
+        ///This option not required at this time
         ///</summary>
         //public static Product SearchProducts(Product product)
         //{
@@ -189,22 +167,12 @@ namespace DBLibrary
         //}
 
         ///<summary>
+        ///takes a context and returns a List of Locations
         ///</summary>
         public static List<Locations> ReadAllLocations(Project0Context db)
         {
             return db.Locations.ToList();
-            //make a list of locations
-            //IEnumerable<Location> locationsList = new List<Location>();
-/*            foreach (var l in db.Locations)
-            {
-                Console.WriteLine($"ID =>{l.LocationId}");
-                //Location location = new Location();
-                //prod = Mapper.MapProduct(p);
-                Location m = new Location();
-                m = Mapper.MapLocation(l);
-                Console.WriteLine($"CITY =>{m.LocationCity}");
-                db.Locations.Add(l);
-            }*/            
+       
         }
         /// <summary>
         ///takes a location ID and returns the Location object
@@ -265,9 +233,9 @@ namespace DBLibrary
          * CUSTOMER FUNCTIONS BELOW
          * *************************************/
          
-            ///
-            ///
-
+        ///<summary>
+        ///takes a context and Customer. Returns a true bool to indicate insertion was successfull
+        /// </summary>
         public static bool AddCustomer(Project0Context context, Customer customer)
         {
             //needs to be mapped first!!!
@@ -290,7 +258,8 @@ namespace DBLibrary
 
 
         ///<summary>
-        ///This method takes the verified customer info from main and inserts it into the DB
+        ///This method takes as context and the verified customer info from main and inserts it into the DB
+        ///Returns the customer from the DB
         ///</summary>
         public static Customer ReadCustomer(Project0Context context, Customer customer)
         {
@@ -339,7 +308,7 @@ namespace DBLibrary
          * *************************************/
 
         ///<summary>
-        ///This option will take a complete order object and insert it into the DB
+        ///This option takes a DB context and an order object and inserts it into the DB
         ///</summary>
         public static void AddOrder(Project0Context context, Order order)
         {
@@ -364,23 +333,58 @@ namespace DBLibrary
             }
             context.Add(orders);
             context.SaveChanges();
-
         }
 
         ///<summary>
         ///This option will take the details of an order inputted by the user and searches for a matching order. 
         ///Then returns the order to main for display
         ///</summary>
-        public static Orders ReadOrder(Project0Context context, Orders order)
+        public static Order ReadOrderByOrderId(Project0Context context, int ID)
         {
-            return order;
+            //List<Order> customersOrders = new List<Order>();
+            //filter all orders by order ID
+            //getj back the Orders obj
+            var order1 = context.Orders
+                .Where(x => x.OrderId == ID)
+                .First();
+
+                //create an Order obj and populate itwith custID OrderID LocID
+                Order custsOrder = new Order();
+                custsOrder.CustomerID = order1.CustomerId;
+                custsOrder.LocationID = order1.LocationId;
+                custsOrder.OrderID = order1.OrderId;
+
+                //get products based on the orderID
+                var prods1 = context.ProductsFromOrder
+                    .Where(x => x.OrderId == ID)
+                    .ToList();
+
+                foreach (var x in prods1)
+                {
+                    custsOrder.itemsOrdered.Add(GetProdNameById(context, x.ProductId), x.Quantity);
+                }
+
+                //add Order to the List<>
+                //customersOrders.Add(custsOrder);
+            
+                return custsOrder;
+        }
+
+        public static string GetProdNameById(Project0Context context, int prodID)
+        {
+            var name = context.Products
+                .Where(x => x.ProductId == prodID).First();
+
+            return name.ProductName;
         }
 
         ///<summary>
         ///</summary>
-        public static DbSet<Orders> ReadAllOrders(Project0Context context)
+        public static List<Orders> ReadAllOrders(Project0Context context)
         {
-            return context.Orders;
+            //var custOrders = context.Orders.Where(x => x.CustomerId == response1).ToList();
+
+            return context.Orders.ToList();
         }
 
         ///<summary>
