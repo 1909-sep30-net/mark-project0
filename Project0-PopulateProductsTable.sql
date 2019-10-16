@@ -1,5 +1,5 @@
 
-
+INSERT INTO Project0.Products (ProductName, ProductPrice) VALUES ('apple', 20);
 INSERT INTO Project0.Products (ProductName, ProductPrice) VALUES ('banana', 10);
 INSERT INTO Project0.Products (ProductName, ProductPrice) VALUES ('avacado', 11);
 INSERT INTO Project0.Products (ProductName, ProductPrice) VALUES ('beef pound', 12);

@@ -7,7 +7,7 @@ namespace ClassLibrary1
     public class Location
     {
 
-        static int      LocationID      = 0;
+
         public int      locID           { get; set; }
         public string   LocationName    { get; set; }
         public string   LocationStreet  { get; set; }
@@ -19,8 +19,15 @@ namespace ClassLibrary1
 
         public Location(string loc, string street = null, string city = null, int zip = 00000)
         {
-            LocationID++;
-            locID = LocationID;
+            LocationName = loc;
+            LocationStreet = street;
+            LocationCity = city;
+            LocationZip = zip;
+        }
+
+        public Location(int ID, string loc, string street = null, string city = null, int zip = 00000)
+        {
+            locID = ID;
             LocationName = loc;
             LocationStreet = street;
             LocationCity = city;
