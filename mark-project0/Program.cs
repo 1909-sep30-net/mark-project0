@@ -18,7 +18,7 @@
 
 //this is the CONNECTIONSTRING to connect Entity Framework Core.
 /*
- * dotnet ef dbcontext scaffold "Server=tcp:1909escalonasql.database.windows.net,1433;Initial Catalog=PokemonDb;Persist Security Info=False;User ID=nick;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" Microsoft.EntityFrameworkCore.SqlServer --startup-project ../EfDemo.App --force --output-dir Entities
+ * dotnet ef dbcontext scaffold "Server=tcp:1909escalonasql.database.windows.net,1433;Initial Catalog=PokemonDb;Persist Security Info=False;User ID=nick;Password={nicks-password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" Microsoft.EntityFrameworkCore.SqlServer --startup-project ../EfDemo.App --force --output-dir Entities
 * make sure to edit with personal info.*/
 
 using NLog;
