@@ -46,51 +46,55 @@ namespace mark_project0
         private static readonly NLog.ILogger s_logger =LogManager.GetCurrentClassLogger();
 
         //function to get user info
-        static Customer RegisterUser() //this needs to input the new user in the DB
+        static Customer RegisterUser(Project0Context db) //this needs to input the new user in the DB
         {
-/*            //have user enter all info.
-            Console.WriteLine("Please enter your Street and home number.");
-            string street = Console.ReadLine();
-            Console.WriteLine("Please enter your City.");
-            string city = Console.ReadLine();
-            Console.WriteLine("Please enter your Zip Code.");
-            int zip = Convert.ToInt32(Console.ReadLine());*/
 
-            //Customer customer1 = new Customer(fName, lName);
             Customer customer1 = new Customer();
             bool success = false;
+            string fName;
+            string lName;
             while (success == false)
             {
-                try
+                while (success == false)
                 {
-                    Console.WriteLine("\nPlease enter your First Name.");
-                    string fName = Console.ReadLine();
-                    customer1.CustomerFirstName = fName;
-                    success = true;
+                    try
+                    {
+                        Console.WriteLine("\nPlease enter your First Name.");
+                        fName = Console.ReadLine();
+                        customer1.CustomerFirstName = fName;
+                        success = true;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        s_logger.Info(ex);
+                    }
                 }
-                catch (ArgumentException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    s_logger.Info(ex);
-                }
-            }
 
-            success = false;
-            while (success == false)
-            {
-                try
+                success = false;
+                while (success == false)
                 {
-                    Console.WriteLine("\nPlease enter your Last Name.");
-                    string lName = Console.ReadLine();
-                    customer1.CustomerLastName = lName;
-                    success = true;
+                    try
+                    {
+                        Console.WriteLine("\nPlease enter your Last Name.");
+                        lName = Console.ReadLine();
+                        customer1.CustomerLastName = lName;
+                        success = true;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        s_logger.Info(ex);
+                    }
                 }
-                catch (ArgumentException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    s_logger.Info(ex);
-                }
+
+                success = DBRepository.AddCustomer(db,customer1);//add the customoer to the DB. this method does try/catch/finally
+
             }
+            
+
+
+
 
             return customer1;
         }//END OF Register User()
@@ -164,9 +168,9 @@ namespace mark_project0
                             bool custExists = false;
                             while (custExists == false)
                             {
-                                customer = RegisterUser();       //register the user
-                                custExists = DBRepository.AddCustomer(db, customer);
-                                //add the new, VALIDATED, user to the DB. 
+                                //register, verify, insert to DB, verify, then return the customer from the DB.
+                                customer = DBRepository.ReadCustomer(db, RegisterUser(db));
+                                custExists = true;
                             }
                             break;
                         case "B":

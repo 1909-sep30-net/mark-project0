@@ -175,7 +175,7 @@ namespace DBLibrary
         {
             var loc = context.Locations
                 .Where(x => x.LocationId == locNum)
-                .FirstOrDefault();
+                .First();
 
             if (loc == null)
             {   
@@ -227,17 +227,20 @@ namespace DBLibrary
         /// </summary>
         public static bool AddCustomer(Project0Context context, Customer customer)
         {
-            Customers entity = Mapper.MapCustomer(customer);
-            context.Customers.Add(entity);//maybe the context still has the first wrong Customer?
-            try
+            if (!(context.Customers.Any(c => c.CustomerFirstName == customer.CustomerFirstName && c.CustomerLastName == customer.CustomerLastName)))
+            { 
+                Customers entity = Mapper.MapCustomer(customer);
+                context.Customers.Add(entity);//maybe the context still has the first wrong Customer?
+            }
+            else
             {
-                //context.Remove(entity);
-                context.SaveChanges();
+                Console.WriteLine("\tThere is already an account with that name.\n\tPlease try again with a different name.");
+                return false;
             }
 
+            try{ context.SaveChanges(); }
             catch (DbUpdateException ex)
             {
-                //context.Customers.Remove(Mapper.MapCustomer(customer));
                 Console.WriteLine(ex.Message);
                 Console.WriteLine("There was an error Adding your account. Please try again with a different name.");
                 s_logger.Info(ex);
